@@ -1,7 +1,0 @@
-echo "# Hillel-basic" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/Forss0/Hillel-basic.git
-git push -u origin main
