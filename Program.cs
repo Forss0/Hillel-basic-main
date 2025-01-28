@@ -1,13 +1,34 @@
-﻿Console.Write("Enter the day of the week number (1-7): ");
-if (int.TryParse(Console.ReadLine(), out int dayNumber))
-    Console.WriteLine(dayNumber 
-        switch
+﻿
+Console.Write("Enter the first number: ");
+int firstNumber = int.Parse(Console.ReadLine());  // Читання першого числа
+
+Console.Write("Enter the second number: ");
+int secondNumber = int.Parse(Console.ReadLine());  // Читання другого числа
+
+Console.Write("Enter an operation (+, -, *, /): ");
+string operation = Console.ReadLine();  // Читання операції
+
+// Виконання обраної операції
+if (operation == "+")
+{
+    Console.WriteLine("Result: " + (firstNumber + secondNumber));
+}
+else if (operation == "-")
+{
+    Console.WriteLine("Result: " + (firstNumber - secondNumber));
+}
+else if (operation == "*")
+{
+    Console.WriteLine("Result: " + (firstNumber * secondNumber));
+}
+else if (operation == "/")
+{
+    if (secondNumber != 0)
     {
-        1 => "Monday",
-        2 => "Tuesday",
-        3 => "Wednesday",
-        4 => "Thursday",
-        5 => "Friday",
-        6 => "Saturday",
-        7 => "Sunday",
-    });
+        Console.WriteLine("Result: " + (firstNumber / (double)secondNumber));
+    }
+    else
+    {
+        Console.WriteLine("Division by zero is not allowed");
+    }
+}
