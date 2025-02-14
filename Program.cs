@@ -1,189 +1,82 @@
 ﻿
-using System.Text.RegularExpressions;
-
-class Program
-{
-    static void Main()
-    {
-        AverageSalary();
-        StarGraph();
-        GeneratePrimes();
-        PasswordCheck();
-        FibonacciSequence();
-        HourlyWageCalculator();
-        ReverseString();
-        IsPalindrome();
-    }
-
-    // 1. Обчислення середнього заробітку
-    static void AverageSalary()
-    {
-        double sum = 0;
-        int count = 0;
-        Console.WriteLine("Введіть зарплати працівників (введіть 0 для завершення):");
-
-        while (true)
+        // 1. Створення масиву та виведення елементів з парними індексами
+        Random random = new Random();
+        int[] array = new int[10];
+        for (int i = 0; i < array.Length; i++)
         {
-            Console.Write("Зарплата: ");
-            string input = Console.ReadLine();
-            if (Regex.IsMatch(input, "^\\d+(\\.\\d+)?$"))
-            {
-                double salary = Convert.ToDouble(input);
-                if (salary == 0) break;
-                sum += salary;
-                count++;
-            }
-            else
-            {
-                Console.WriteLine("Некоректний ввід, спробуйте ще раз.");
-            }
+            array[i] = random.Next(-10, 11);
         }
-
-        double average = count > 0 ? sum / count : 0;
-        Console.WriteLine($"Середній заробіток: {average}\n");
-    }
-
-    // 2. Побудова графіку зірочками
-    static void StarGraph()
-    {
-        Console.Write("Введіть кількість рядків: ");
-        string input = Console.ReadLine();
-        if (Regex.IsMatch(input, "^\\d+$"))
+        Console.WriteLine("Масив: " + string.Join(", ", array));
+        Console.Write("Елементи з парними індексами: ");
+        for (int i = 0; i < array.Length; i += 2)
         {
-            int rows = Convert.ToInt32(input);
-            for (int i = 1; i <= rows; i++)
-            {
-                Console.WriteLine(new string('*', i));
-            }
-        }
-        else
-        {
-            Console.WriteLine("Некоректний ввід.");
+            Console.Write(array[i] + " ");
         }
         Console.WriteLine();
-    }
 
-    // 3. Генерація простих чисел
-    static void GeneratePrimes()
-    {
-        Console.Write("Введіть верхню межу для генерації простих чисел: ");
-        string input = Console.ReadLine();
-        if (Regex.IsMatch(input, "^\\d+$"))
+        // 2. Перевірка, чи є сума елементів масиву невід'ємною
+        int sum = 0;
+        foreach (int num in array)
         {
-            int limit = Convert.ToInt32(input);
-            Console.WriteLine("Прості числа:");
-            for (int i = 2; i <= limit; i++)
+            sum += num;
+        }
+        Console.WriteLine("Сума елементів масиву " + (sum >= 0 ? "невід'ємна" : "від'ємна"));
+
+        // 3. Створення таблиці множення 9x9
+        int[,] multiplicationTable = new int[9, 9];
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++)
             {
-                if (IsPrime(i))
+                multiplicationTable[i, j] = (i + 1) * (j + 1);
+                Console.Write(multiplicationTable[i, j].ToString().PadLeft(3) + " ");
+            }
+            Console.WriteLine();
+        }
+
+        // 4. Двовимірний масив 5x5 і знаходження мін/макс значень з координатами
+        int[,] matrix = new int[5, 5];
+        int min = int.MaxValue, max = int.MinValue;
+        int minX = 0, minY = 0, maxX = 0, maxY = 0;
+
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                matrix[i, j] = random.Next(-50, 51);
+                Console.Write(matrix[i, j].ToString().PadLeft(4));
+                if (matrix[i, j] < min)
                 {
-                    Console.Write(i + " ");
+                    min = matrix[i, j];
+                    minX = i;
+                    minY = j;
+                }
+                if (matrix[i, j] > max)
+                {
+                    max = matrix[i, j];
+                    maxX = i;
+                    maxY = j;
                 }
             }
-            Console.WriteLine("\n");
+            Console.WriteLine();
         }
-        else
-        {
-            Console.WriteLine("Некоректний ввід.");
-        }
-    }
+        Console.WriteLine($"Максимальний елемент: {max} (координати [{maxX}, {maxY}])");
+        Console.WriteLine($"Мінімальний елемент: {min} (координати [{minX}, {minY}])");
 
-    static bool IsPrime(int number)
+        // 5. Програма з enum для визначення дня тижня
+        Console.Write("Введіть кількість днів: ");
+        int days = int.Parse(Console.ReadLine());
+        DayOfWeek startDay = DayOfWeek.Monday;
+        DayOfWeek resultDay = (DayOfWeek)(((int)startDay + days) % 7);
+        Console.WriteLine($"Через {days} днів буде {resultDay}");
+
+    enum DayOfWeek
     {
-        if (number < 2) return false;
-        for (int i = 2; i * i <= number; i++)
-        {
-            if (number % i == 0) return false;
-        }
-        return true;
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday,
+        Saturday,
+        Sunday
     }
-
-    // 4. Перевірка паролю
-    static void PasswordCheck()
-    {
-        Console.Write("Введіть пароль: ");
-        string password = Console.ReadLine();
-        Regex regex = new Regex("^(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,}$");
-
-        if (regex.IsMatch(password))
-            Console.WriteLine("Пароль прийнятний.\n");
-        else
-            Console.WriteLine("Пароль не відповідає вимогам.\n");
-    }
-
-    // 5. Генерація фібоначчівської послідовності
-    static void FibonacciSequence()
-    {
-        Console.Write("Введіть кількість чисел Фібоначчі: ");
-        string input = Console.ReadLine();
-        if (Regex.IsMatch(input, "^\\d+$"))
-        {
-            int n = Convert.ToInt32(input);
-            int first = 0, second = 1;
-
-            // Якщо кількість чисел Фібоначчі 1, виводимо лише перше число
-            if (n >= 1)
-                Console.Write(first + " ");
-
-            // Якщо кількість чисел Фібоначчі 2 або більше, виводимо друге число
-            if (n >= 2)
-                Console.Write(second + " ");
-
-            // Для кожного наступного числа
-            for (int i = 3; i <= n; i++)
-            {
-                int next = first + second;
-                Console.Write(next + " ");
-                first = second;   // Переміщаємо друге число в перше
-                second = next;    // Переміщаємо нове число в друге
-            }
-            Console.WriteLine("\n");
-        }
-        else
-        {
-            Console.WriteLine("Некоректний ввід.");
-        }
-    }
-
-    // 6. Калькулятор оплати праці за годину
-    static void HourlyWageCalculator()
-    {
-        Console.Write("Введіть кількість годин, відпрацьованих за день: ");
-        string hoursInput = Console.ReadLine();
-        Console.Write("Введіть погодинну ставку: ");
-        string rateInput = Console.ReadLine();
-
-        if (Regex.IsMatch(hoursInput, "^\\d+(\\.\\d+)?$") && Regex.IsMatch(rateInput, "^\\d+(\\.\\d+)?$"))
-        {
-            double hours = Convert.ToDouble(hoursInput);
-            double rate = Convert.ToDouble(rateInput);
-            Console.WriteLine($"Оплата за день: {hours * rate}\n");
-        }
-        else
-        {
-            Console.WriteLine("Некоректний ввід.");
-        }
-    }
-
-    // 7. Реверсування рядка
-    static void ReverseString()
-    {
-        Console.Write("Введіть рядок для реверсування: ");
-        string input = Console.ReadLine();
-        char[] charArray = input.ToCharArray();
-        Array.Reverse(charArray);
-        Console.WriteLine($"Реверсований рядок: {new string(charArray)}\n");
-    }
-
-    // 8. Перевірка на паліндром
-    static void IsPalindrome()
-    {
-        Console.Write("Введіть рядок для перевірки на паліндром: ");
-        string input = Console.ReadLine();
-        string reversed = new string(input.Reverse().ToArray());
-
-        if (input.Equals(reversed, StringComparison.OrdinalIgnoreCase))
-            Console.WriteLine("Це паліндром.\n");
-        else
-            Console.WriteLine("Це не паліндром.\n");
-    }
-}
