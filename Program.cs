@@ -1,16 +1,39 @@
 ﻿
 using System;
-using System.Text;
 
 class Program
 {
+
     static void Main()
     {
-        Console.OutputEncoding = Encoding.Unicode;
+        string report = "Звіт про події\n";
 
-        Console.Write("Введіть рядок: ");
-        string input = Console.ReadLine()?.Replace(" ", "");
+        string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+        report += $"Дата: {currentDate}\n";
 
-        Console.WriteLine("Результат: " + input);
+        report += "\nСписок подій:\n";
+
+        string eventInput;
+        int eventCount = 1;
+
+        Console.WriteLine("Введіть події (для завершення введіть 'stop'):");
+
+        // Цикл для введення подій
+        while (true)
+        {
+            Console.Write($"Подія {eventCount}: ");
+            eventInput = Console.ReadLine();
+
+            if (eventInput.ToLower() == "стоп")
+            {
+                break;
+            }
+
+            report += $"- {eventInput}\n";
+            eventCount++;
+        }
+
+        Console.WriteLine("\nГотовий звіт:");
+        Console.WriteLine(report);
     }
 }
