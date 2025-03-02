@@ -11,7 +11,7 @@ class Hangman
         string word = "home";
         char[] hiddenWord = new char[word.Length];
         for (int i = 0; i < hiddenWord.Length; i++) hiddenWord[i] = '_';
-        int attempts = 6;
+        int attempts = 5;
         HashSet<char> guessedLetters = new HashSet<char>();
 
         Console.WriteLine("Вітаємо! Спробуйте вгадати зашифроване слово!");
