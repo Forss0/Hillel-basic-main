@@ -1,39 +1,82 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-class Program
+class Hangman
 {
-
     static void Main()
     {
-        string report = "Звіт про події\n";
+        Console.OutputEncoding = Encoding.UTF8;
+        string word = "home";
+        char[] hiddenWord = new char[word.Length];
+        for (int i = 0; i < hiddenWord.Length; i++) hiddenWord[i] = '_';
+        int attempts = 6;
+        HashSet<char> guessedLetters = new HashSet<char>();
 
-        string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
-        report += $"Дата: {currentDate}\n";
+        Console.WriteLine("Вітаємо! Спробуйте вгадати зашифроване слово!");
+        Console.WriteLine("Кількість літер у слові: " + word.Length);
+        Console.WriteLine("Кількість можливих невірних спроб: " + attempts);
 
-        report += "\nСписок подій:\n";
-
-        string eventInput;
-        int eventCount = 1;
-
-        Console.WriteLine("Введіть події (для завершення введіть 'stop'):");
-
-        // Цикл для введення подій
-        while (true)
+        while (Array.Exists(hiddenWord, ch => ch == '_') && attempts > 0)
         {
-            Console.Write($"Подія {eventCount}: ");
-            eventInput = Console.ReadLine();
+            Console.WriteLine("\nСлово: " + string.Join(" ", hiddenWord));
+            Console.Write("Введіть вашу літеру: ");
+            string input = Console.ReadLine().Trim().ToLower();
 
-            if (eventInput.ToLower() == "стоп")
+            // Перевірка на введення однієї літери
+            if (input.Length != 1 || !char.IsLetter(input[0]))
             {
-                break;
+                Console.WriteLine("❌ Помилка! Введіть лише одну літеру.");
+                continue;
             }
 
-            report += $"- {eventInput}\n";
-            eventCount++;
+            char letter = input[0];
+
+            // Перевірка, чи ця літера вже вводилася
+            if (guessedLetters.Contains(letter))
+            {
+                Console.WriteLine(" Ви вже вводили цю літеру!");
+                continue;
+            }
+
+            guessedLetters.Add(letter);
+            bool found = false;
+            List<int> positions = new List<int>();
+
+            // Перевірка, чи є літера в слові
+            for (int i = 0; i < word.Length; i++)
+            {
+                if (word[i] == letter)
+                {
+                    hiddenWord[i] = letter;
+                    found = true;
+                    positions.Add(i + 1);
+                }
+            }
+
+            if (found)
+            {
+                Console.WriteLine($"✅ Літера '{letter}' є у слові! Позиції: {string.Join(", ", positions)}");
+            }
+            else
+            {
+                attempts--;
+                Console.WriteLine($"❌ Такої літери немає! Залишилось спроб: {attempts}");
+            }
         }
 
-        Console.WriteLine("\nГотовий звіт:");
-        Console.WriteLine(report);
+        // Перевірка результату гри
+        if (!Array.Exists(hiddenWord, ch => ch == '_'))
+        {
+            Console.WriteLine($"\n Вітаємо, ви вгадали слово! Зашифроване слово: {word}");
+        }
+        else
+        {
+            Console.WriteLine($"\n Ви програли. Загадане слово було: {word}");
+        }
+
+        Console.WriteLine(" Дякуємо за гру!");
+        Console.ReadKey();
     }
 }
