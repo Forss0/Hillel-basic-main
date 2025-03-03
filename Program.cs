@@ -1,31 +1,35 @@
 ﻿
-
 using System;
+using System.Text;
 
 class TicTacToe
 {
     static char[] board = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-    static char currentPlayer = 'X';
+    static char[] players = { 'A', 'B', 'C' };
+    static int currentPlayerIndex = 0;
 
     static void Main()
     {
+        Console.OutputEncoding = Encoding.Unicode;
+        Console.InputEncoding = Encoding.Unicode;
+
+        int move;
         bool gameRunning = true;
 
         while (gameRunning)
         {
             Console.Clear();
             PrintBoard();
+            Console.Write($"Гравець {players[currentPlayerIndex]}, оберіть номер клітинки: ");
 
-            Console.Write($"Гравець {currentPlayer}, оберіть клітинку (1-9): ");
-            if (int.TryParse(Console.ReadLine(), out int move) && move >= 1 && move <= 9 && board[move - 1] != 'X' && board[move - 1] != 'O')
+            if (int.TryParse(Console.ReadLine(), out move) && move >= 1 && move <= 9 && board[move - 1] != 'X' && board[move - 1] != 'O' && board[move - 1] != 'A' && board[move - 1] != 'B' && board[move - 1] != 'C')
             {
-                board[move - 1] = currentPlayer;
-
+                board[move - 1] = players[currentPlayerIndex];
                 if (CheckWin())
                 {
                     Console.Clear();
                     PrintBoard();
-                    Console.WriteLine($"Переміг гравець {currentPlayer}!");
+                    Console.WriteLine($"Переміг гравець {players[currentPlayerIndex]}!");
                     gameRunning = false;
                 }
                 else if (CheckDraw())
@@ -37,7 +41,7 @@ class TicTacToe
                 }
                 else
                 {
-                    currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+                    currentPlayerIndex = (currentPlayerIndex + 1) % players.Length; //Наступний гравець
                 }
             }
             else
@@ -51,9 +55,9 @@ class TicTacToe
     static void PrintBoard()
     {
         Console.WriteLine($" {board[0]} | {board[1]} | {board[2]} ");
-        Console.WriteLine("---+---+---");
+        Console.WriteLine("-----------");
         Console.WriteLine($" {board[3]} | {board[4]} | {board[5]} ");
-        Console.WriteLine("---+---+---");
+        Console.WriteLine("-----------");
         Console.WriteLine($" {board[6]} | {board[7]} | {board[8]} ");
     }
 
@@ -61,16 +65,16 @@ class TicTacToe
     {
         int[,] winCombinations =
         {
-            {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, // Горизонтальні
-            {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, // Вертикальні
+            {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, // Горизонталі
+            {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, // Вертикалі
             {0, 4, 8}, {2, 4, 6}             // Діагоналі
         };
 
         for (int i = 0; i < winCombinations.GetLength(0); i++)
         {
-            if (board[winCombinations[i, 0]] == currentPlayer &&
-                board[winCombinations[i, 1]] == currentPlayer &&
-                board[winCombinations[i, 2]] == currentPlayer)
+            if (board[winCombinations[i, 0]] == players[currentPlayerIndex] &&
+                board[winCombinations[i, 1]] == players[currentPlayerIndex] &&
+                board[winCombinations[i, 2]] == players[currentPlayerIndex])
             {
                 return true;
             }
@@ -82,7 +86,10 @@ class TicTacToe
     {
         foreach (char c in board)
         {
-            if (c != 'X' && c != 'O') return false;
+            if (char.IsDigit(c))
+            {
+                return false;
+            }
         }
         return true;
     }
