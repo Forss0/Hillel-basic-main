@@ -1,62 +1,55 @@
 ﻿
 using System;
-using System.Collections.Generic;
-using System.Text;
+
+class Account
+{
+    private string name;
+    private double balance;
+
+    public Account(string name, double initialBalance)
+    {
+        this.name = name;
+        this.balance = initialBalance < 0 ? 0 : initialBalance;
+    }
+
+    public void Deposit(double amount)
+    {
+        if (amount > 0)
+        {
+            balance += amount;
+        }
+    }
+
+    public void Withdrawal(double amount)
+    {
+        if (amount > 0 && balance >= amount)
+        {
+            balance -= amount;
+        }
+    }
+
+    public double GetBalance()
+    {
+        return balance;
+    }
+
+    public override string ToString()
+    {
+        return $"{name}: {balance} USD";
+    }
+}
 
 class Program
 {
-    static List<string> tasks = new List<string>();
-
     static void Main()
     {
-        Console.OutputEncoding = Encoding.Unicode;
-        LoadTasks();
-        while (true)
-        {
-            Console.WriteLine("\n1. Додати справу\n2. Вивести список\n3. Видалити справу\n4. Вихід");
-            string choice = Console.ReadLine();
-            if (choice == "1") AddTask();
-            else if (choice == "2") ShowTasks();
-            else if (choice == "3") RemoveTask();
-            else if (choice == "4") break;
-        }
-    }
+        Account heikkisAccount = new Account("Heikki's account", 100.00);
+        Account heikkisSwissAccount = new Account("Heikki's account in Switzerland", 1000000.00);
 
-    static void LoadTasks()
-    {
-        if (tasks.Count > 0)
-        {
-            Console.WriteLine("\nЗбережений список справ:");
-            ShowTasks();
-        }
-        else
-        {
-            Console.WriteLine("\nСписок справ порожній.");
-        }
-    }
+        heikkisAccount.Withdrawal(20);
+        Console.WriteLine("The balance of Heikki's account is now: " + heikkisAccount.GetBalance());
 
-    static void AddTask()
-    {
-        Console.Write("Введіть справу: ");
-        tasks.Add(Console.ReadLine());
-    }
-
-    static void ShowTasks()
-    {
-        if (tasks.Count == 0)
-        {
-            Console.WriteLine("Список справ порожній.");
-            return;
-        }
-        for (int i = 0; i < tasks.Count; i++)
-            Console.WriteLine($"{i + 1}. {tasks[i]}");
-    }
-
-    static void RemoveTask()
-    {
-        ShowTasks();
-        Console.Write("Введіть номер: ");
-        if (int.TryParse(Console.ReadLine(), out int index) && index > 0 && index <= tasks.Count)
-            tasks.RemoveAt(index - 1);
+        heikkisSwissAccount.Deposit(200);
+        Console.WriteLine("The balance of Heikki's other account is now: " + heikkisSwissAccount.GetBalance());
     }
 }
